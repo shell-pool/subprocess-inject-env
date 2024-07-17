@@ -1,0 +1,21 @@
+[graph]
+all-features = true
+
+[advisories]
+version = 2
+db-path = "~/.cargo/advisory-db"
+db-urls = ["https://github.com/rustsec/advisory-db"]
+yanked = "deny"
+ignore = [
+]
+
+[licenses]
+allow = [
+    "CC0-1.0", # unencumbered
+    "ISC", # notice
+    "Apache-2.0",
+    "MIT",
+    "Unicode-DFS-2016",
+    "BSD-3-Clause", # notice
+]
+confidence-threshold = 1.0
