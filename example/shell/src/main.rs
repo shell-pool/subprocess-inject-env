@@ -25,7 +25,7 @@ fn main() -> anyhow::Result<()> {
 
     child_stdin.write_all("echo \"initial:${SOME_ENV_VAR}\"\n".as_bytes())?;
 
-    env_injector.call("SOME_ENV_VAR", "injected_value")
+    env_injector.setenv("SOME_ENV_VAR", "injected_value")
         .context("injecting new env var value")?;
 
     child_stdin.write_all("echo \"injected:${SOME_ENV_VAR}\"\n".as_bytes())?;
