@@ -1,12 +1,11 @@
 use std::{
-    process::Command,
-    thread,
-    fs,
-    path::{PathBuf, Path},
-    io::Write,
     ffi::CString,
+    fs,
+    io::Write,
     os::unix::net::UnixStream,
-    time,
+    path::{Path, PathBuf},
+    process::Command,
+    thread, time,
 };
 
 use byteorder::{NativeEndian, ReadBytesExt, WriteBytesExt};
@@ -18,7 +17,7 @@ macro_rules! cerr {
     }}
 }
 
-const PASSWORD : &str = "SUBPROCESS_INJECT_ENV__ARG__PASSWORD";
+const PASSWORD: &str = "SUBPROCESS_INJECT_ENV__ARG__PASSWORD";
 const PASSWORD_LEN: usize = 32;
 
 const CONTROL_SOCK: &str = "SUBPROCESS_INJECT_ENV__ARG__CONTROL_SOCK";
@@ -60,8 +59,11 @@ impl EnvInjector {
     /// to set up the communication required.
     pub fn new(cmd: &mut Command) -> Result<Self, Error> {
         let rng = rand::rngs::StdRng::from_entropy();
-        let password: String = rng.sample_iter(&rand::distributions::Alphanumeric)
-            .take(PASSWORD_LEN).map(char::from).collect();
+        let password: String = rng
+            .sample_iter(&rand::distributions::Alphanumeric)
+            .take(PASSWORD_LEN)
+            .map(char::from)
+            .collect();
 
         let shim_so = ShimSo::new()?;
 
@@ -73,11 +75,7 @@ impl EnvInjector {
 
         cmd.env(PASSWORD, password.as_str());
 
-        Ok(EnvInjector {
-            _shim_so: shim_so,
-            control_sock,
-            password,
-        })
+        Ok(EnvInjector { _shim_so: shim_so, control_sock, password })
     }
 
     /// Call setenv in the child process.
@@ -105,25 +103,24 @@ impl EnvInjector {
         };
 
         assert!(self.password.as_bytes().len() == PASSWORD_LEN);
-        stream.write_all(self.password.as_bytes())
+        stream
+            .write_all(self.password.as_bytes())
             .map_err(|e| cerr!("writing password: {:?}", e))?;
 
-        let c_key = CString::new(key)
-            .map_err(|e| cerr!("converting key to cstr: {:?}", e))?;
-        let c_value = CString::new(value)
-            .map_err(|e| cerr!("converting value to cstr: {:?}", e))?;
+        let c_key = CString::new(key).map_err(|e| cerr!("converting key to cstr: {:?}", e))?;
+        let c_value =
+            CString::new(value).map_err(|e| cerr!("converting value to cstr: {:?}", e))?;
 
-        stream.write_i32::<NativeEndian>(c_key.as_bytes().len() as i32)
+        stream
+            .write_i32::<NativeEndian>(c_key.as_bytes().len() as i32)
             .map_err(|e| cerr!("writing key length: {:?}", e))?;
-        stream.write_i32::<NativeEndian>(c_value.as_bytes().len() as i32)
+        stream
+            .write_i32::<NativeEndian>(c_value.as_bytes().len() as i32)
             .map_err(|e| cerr!("writing value length: {:?}", e))?;
-        stream.write_all(key.as_bytes())
-            .map_err(|e| cerr!("writing key: {:?}", e))?;
-        stream.write_all(value.as_bytes())
-            .map_err(|e| cerr!("writing value: {:?}", e))?;
+        stream.write_all(key.as_bytes()).map_err(|e| cerr!("writing key: {:?}", e))?;
+        stream.write_all(value.as_bytes()).map_err(|e| cerr!("writing value: {:?}", e))?;
 
-        let ret = stream.read_i32::<NativeEndian>()
-            .map_err(|e| cerr!("reading ret: {:?}", e))?;
+        let ret = stream.read_i32::<NativeEndian>().map_err(|e| cerr!("reading ret: {:?}", e))?;
         if ret != 0 {
             return Err(cerr!("setting env: {:?}", nix::errno::Errno::from_raw(ret)));
         }
@@ -133,8 +130,8 @@ impl EnvInjector {
 }
 
 /// A handle to the shim .so file. It is normally stored as embedded data in the
-/// rlib, but for the life of one of these handles it gets written out to a tmp file.
-/// The shim file gets cleaned up when this handle falls out of scope.
+/// rlib, but for the life of one of these handles it gets written out to a tmp
+/// file. The shim file gets cleaned up when this handle falls out of scope.
 #[derive(Debug)]
 struct ShimSo {
     dir: tempfile::TempDir,
@@ -152,9 +149,7 @@ impl ShimSo {
 
         let mut overlay_file =
             fs::File::create(&path).map_err(|e| cerr!("making env_shim.so: {}", e))?;
-        overlay_file
-            .write_all(overlay_blob)
-            .map_err(|e| cerr!("writing env_shim.so: {}", e))?;
+        overlay_file.write_all(overlay_blob).map_err(|e| cerr!("writing env_shim.so: {}", e))?;
 
         Ok(ShimSo { dir, path })
     }
