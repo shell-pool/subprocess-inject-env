@@ -81,7 +81,8 @@ impl EnvInjector {
         })
     }
 
-    pub fn call(&self, key: &str, value: &str) -> Result<(), Error> {
+    /// Call setenv in the child process.
+    pub fn setenv(&self, key: &str, value: &str) -> Result<(), Error> {
         // The user might call the shim immediately after launching the program,
         // in which case the control socket might not be up yet. Use an
         // exponential backoff to poll until the control socket comes up.
