@@ -32,7 +32,6 @@ pub enum Error {
     Err {
         msg: String,
     },
-    __NonExhaustive,
 }
 
 impl std::fmt::Display for Error {
