@@ -28,16 +28,13 @@ const CONTROL_SOCK: &str = "SUBPROCESS_INJECT_ENV__ARG__CONTROL_SOCK";
 pub enum Error {
     /// An opaque error with a useful debugging message but
     /// which callers should not dispatch on.
-    Err {
-        msg: String,
-    },
+    Err { msg: String },
 }
 
 impl std::fmt::Display for Error {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> {
         match self {
             Error::Err { msg } => write!(f, "{}", msg)?,
-            _ => write!(f, "{:?}", self)?,
         }
 
         Ok(())
