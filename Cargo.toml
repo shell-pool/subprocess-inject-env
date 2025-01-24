@@ -1,6 +1,6 @@
 [package]
 name = "subprocess-inject-env"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 repository = "https://github.com/shell-pool/subprocess-inject-env"
 authors = ["Ethan Pailes <pailes@google.com>"]
