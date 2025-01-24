@@ -99,7 +99,7 @@ impl EnvInjector {
             None => return Err(cerr!("could not dial control socket")),
         };
 
-        assert!(self.password.as_bytes().len() == PASSWORD_LEN);
+        assert_eq!(self.password.len(), PASSWORD_LEN);
         stream
             .write_all(self.password.as_bytes())
             .map_err(|e| cerr!("writing password: {:?}", e))?;
