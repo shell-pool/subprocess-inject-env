@@ -15,7 +15,7 @@ keywords = ["subprocess", "environment", "env"]
 [dependencies]
 tempfile = "3" # tmp .so file and control socket
 byteorder = "1" # endianness
-rand = { version = "0.8", features = ["std_rng"] }
+rand = { version = "0.9", features = ["std_rng"] }
 
 # pid poking
 [dependencies.nix]
