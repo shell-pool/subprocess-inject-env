@@ -24,4 +24,4 @@ features = ["process"]
 
 # compiler resolution
 [build-dependencies]
-which = "6"
+which = "7"
