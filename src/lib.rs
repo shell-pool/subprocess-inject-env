@@ -55,9 +55,9 @@ impl EnvInjector {
     /// Create a new environment injector, mutating the given command
     /// to set up the communication required.
     pub fn new(cmd: &mut Command) -> Result<Self, Error> {
-        let rng = rand::rngs::StdRng::from_entropy();
+        let rng = rand::rngs::StdRng::from_os_rng();
         let password: String = rng
-            .sample_iter(&rand::distributions::Alphanumeric)
+            .sample_iter(&rand::distr::Alphanumeric)
             .take(PASSWORD_LEN)
             .map(char::from)
             .collect();
