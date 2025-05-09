@@ -20,7 +20,7 @@ fn main() {
     match run() {
         Ok(()) => {}
         Err(e) => {
-            panic!("build failed: {}", e);
+            panic!("build failed: {e}");
         }
     }
 }
@@ -84,8 +84,8 @@ enum Error {
 impl std::fmt::Display for Error {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> {
         match self {
-            Error::Err { msg } => write!(f, "{}", msg)?,
-            _ => write!(f, "{:?}", self)?,
+            Error::Err { msg } => write!(f, "{msg}")?,
+            _ => write!(f, "{self:?}")?,
         }
 
         Ok(())
