@@ -34,7 +34,7 @@ pub enum Error {
 impl std::fmt::Display for Error {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> {
         match self {
-            Error::Err { msg } => write!(f, "{}", msg)?,
+            Error::Err { msg } => write!(f, "{msg}")?,
         }
 
         Ok(())
