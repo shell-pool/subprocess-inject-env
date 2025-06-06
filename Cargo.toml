@@ -19,7 +19,7 @@ rand = { version = "0.9", features = ["std_rng"] }
 
 # pid poking
 [dependencies.nix]
-version = "0.28"
+version = "0.30"
 features = ["process"]
 
 # compiler resolution
